@@ -17,3 +17,6 @@ class SignupView(CreateView):
         user.groups.add(group)
         user.save()
         return response
+    
+
+
