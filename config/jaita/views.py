@@ -68,14 +68,23 @@ class HomeView(LoginRequiredMixin, TemplateView):
 
 class AppointmentCreateView(LoginRequiredMixin, CreateView):
     model = Appointment
-    form_class = AppointmentForm
+    form_class = AppointmentForm  # Assuming you have defined an AppointmentForm
     template_name = 'appointment/create.html'
     success_url = reverse_lazy('home')
+    default_group_name = 'Patient'  # Set the default group name
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        # Assign the user to a group if not already assigned
+        group_name = self.default_group_name
+        group, created = Group.objects.get_or_create(name=group_name)
+        if not self.request.user.groups.filter(name=group_name).exists():
+            self.request.user.groups.add(group)
+        
+        # Assign the user to the appointment
+        form.instance.patient = self.request.user.patient
+        
         return super().form_valid(form)
-
+    
 class VitalsCreateView(LoginRequiredMixin, CreateView):
     model = Vitals
     form_class = VitalsForm
