@@ -1,7 +1,8 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import Group
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
+from django import forms
 
 class SignupView(CreateView):
     form_class = UserCreationForm
@@ -19,4 +20,15 @@ class SignupView(CreateView):
         return response
     
 
-
+class LoginForm(AuthenticationForm):
+    # You can customize the form fields here if needed
+    # For example, you might want to add some CSS classes
+    # or placeholder texts to the form fields.
+    username = forms.CharField(
+        label="Username",
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'})
+    )
+    password = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'})
+    )
