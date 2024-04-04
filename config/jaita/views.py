@@ -39,3 +39,11 @@ class LoginView(FormView):
             return super().form_valid(form)
         else:
             return self.form_invalid(form)
+        
+
+class LogoutView(RedirectView):
+    url = reverse_lazy('login')
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return super().get(request, *args, **kwargs)
